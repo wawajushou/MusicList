@@ -1,33 +1,30 @@
 """
-每日音乐榜单聚合工具 —— 入口文件
+每日直播歌单工具 —— 入口文件
+
+功能：
+- 爬取各大音乐平台榜单数据
+- 自动生成明日直播歌单
 
 用法：
-    # 抓取网易云热歌榜（默认）
-    python main.py
-
-    # 指定平台和榜单
-    python main.py --platform netease --list-id 3779629
-    python main.py --platform qqmusic --list-id 26
-    python main.py --platform kugou --list-id 8888
-
-    # 抓取单个平台所有主要榜单
-    python main.py --platform netease --all
-    python main.py --platform qqmusic --all
-    python main.py --platform kugou --all
-
-    # 抓取所有平台的所有主要榜单
-    python main.py --all
+    python main.py                    # 默认：更新榜单，生成歌单
+    python main.py --crawl            # 仅爬取榜单（不生成歌单）
+    python main.py --playlist         # 仅生成歌单（不爬取）
+    python main.py --all              # 爬取所有平台所有榜单
+    python main.py --list             # 显示所有可用榜单
 """
 
 import argparse
 import sys
 import time
+from datetime import datetime
+from pathlib import Path
 
 from crawlers import (
     NeteaseSpider, NETEASE_CHARTS,
     QQMusicSpider, QQMUSIC_CHARTS,
     KugouSpider, KUGOU_CHARTS,
 )
+from generator.playlist_gen import PlaylistGenerator
 
 
 # ============================================================
@@ -50,18 +47,38 @@ PLATFORMS = {
     "kugou": {
         "spider_cls": KugouSpider,
         "charts": KUGOU_CHARTS,
-        "default_id": "6666",
+        "default_id": "24971",  # 默认 DJ 热歌榜
         "name": "酷狗音乐",
     },
 }
 
+# 默认爬取的榜单：酷狗 DJ热歌榜 + 酷狗飙升榜
+DEFAULT_CHARTS = [
+    {"platform": "kugou", "chart_id": "24971", "chart_name": "DJ热歌榜"},
+    {"platform": "kugou", "chart_id": "6666", "chart_name": "酷狗飙升榜"},
+]
+
+# 项目根目录
+PROJECT_ROOT = Path(__file__).resolve().parent
+
 
 # ============================================================
-# 运行函数
+# 爬虫运行函数
 # ============================================================
 
-def run_spider(platform: str, list_id: str | None = None) -> None:
-    """运行单个平台的单个榜单爬虫"""
+def run_spider(platform: str, list_id: str | None = None, silent: bool = False) -> None:
+    """
+    运行单个平台的单个榜单爬虫
+
+    Parameters
+    ----------
+    platform : str
+        平台名称
+    list_id : str | None
+        榜单 ID
+    silent : bool
+        是否静默模式（不显示歌单详情）
+    """
     config = PLATFORMS[platform]
     spider_cls = config["spider_cls"]
     _id = list_id or config["default_id"]
@@ -79,14 +96,15 @@ def run_spider(platform: str, list_id: str | None = None) -> None:
         spider = spider_cls(list_id=_id)
         songs = spider.run()
 
-    if songs:
+    # 非静默模式下显示歌单详情
+    if songs and not silent:
         print(f"\n{'='*50}")
         print(f"  {config['name']} · {spider.list_name} (共 {len(songs)} 首)")
         print(f"{'='*50}")
-        for s in songs[:20]:
+        for s in songs[:10]:
             print(f"  {s.rank:>3}. {s.name:<30} - {s.artist}")
-        if len(songs) > 20:
-            print(f"  ... 还有 {len(songs) - 20} 首，详见 JSON 文件")
+        if len(songs) > 10:
+            print(f"  ... 还有 {len(songs) - 10} 首，详见 JSON 文件")
         print()
 
 
@@ -138,46 +156,101 @@ def list_charts() -> None:
 
 
 # ============================================================
+# 歌单生成
+# ============================================================
+
+def run_playlist_generator() -> None:
+    """运行歌单生成器"""
+    data_dir = PROJECT_ROOT / "data"
+    generator = PlaylistGenerator(data_dir=str(data_dir))
+    generator.run()
+
+
+# ============================================================
+# 默认流程：更新榜单 -> 生成歌单
+# ============================================================
+
+def run_default_flow() -> None:
+    """
+    默认流程：
+    1. 每次运行都爬取更新所有榜单
+    2. 运行歌单生成器
+    """
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    print("=" * 60)
+    print("  每日直播歌单工具")
+    print(f"  日期: {today}")
+    print("=" * 60)
+    print()
+
+    # 每次都爬取更新所有榜单
+    for chart in DEFAULT_CHARTS:
+        platform = chart["platform"]
+        chart_id = chart["chart_id"]
+        chart_name = chart["chart_name"]
+
+        print(f"正在更新 {chart_name}...")
+        run_spider(platform, chart_id, silent=True)
+        current_time = datetime.now().strftime("%H:%M:%S")
+        print(f"[OK] {chart_name} 数据于 {current_time} 已更新")
+        print()
+
+    # 运行歌单生成器
+    print("-" * 60)
+    run_playlist_generator()
+
+
+# ============================================================
 # 主入口
 # ============================================================
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="每日音乐榜单聚合工具 —— 自动获取各大音乐平台排行榜数据",
+        description="每日直播歌单工具 —— 爬取榜单 + 生成歌单",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
-  python main.py                                # 默认抓取网易云热歌榜
-  python main.py --platform qqmusic             # 抓取QQ音乐热歌榜
-  python main.py --platform kugou --list-id 6666  # 抓取酷狗飙升榜
-  python main.py --platform netease --all       # 抓取网易云所有榜单
-  python main.py --all                          # 抓取所有平台所有榜单
-  python main.py --list                         # 显示所有可用榜单
+  python main.py                    # 默认流程：更新榜单 -> 生成歌单
+  python main.py --crawl            # 仅爬取榜单
+  python main.py --playlist         # 仅生成歌单（不爬取）
+  python main.py --all              # 爬取所有平台所有榜单
+  python main.py --list             # 显示所有可用榜单
         """,
     )
 
     parser.add_argument(
-        "--platform", "-p",
-        type=str,
-        choices=["netease", "qqmusic", "kugou"],
-        default=None,
-        help="音乐平台 (默认: netease)",
+        "--crawl", "-c",
+        action="store_true",
+        help="仅爬取榜单（默认爬取酷狗DJ热歌榜）",
     )
     parser.add_argument(
-        "--list-id", "-i",
-        type=str,
-        default=None,
-        help="榜单 ID（使用 --list 查看可用ID）",
+        "--playlist", "-g",
+        action="store_true",
+        help="仅生成歌单（不爬取）",
     )
     parser.add_argument(
         "--all", "-a",
         action="store_true",
-        help="抓取所有主要榜单",
+        help="爬取所有平台所有榜单",
     )
     parser.add_argument(
         "--list", "-l",
         action="store_true",
         help="显示所有可用榜单",
+    )
+    parser.add_argument(
+        "--platform", "-p",
+        type=str,
+        choices=["netease", "qqmusic", "kugou"],
+        default=None,
+        help="指定平台（与 --crawl 配合使用）",
+    )
+    parser.add_argument(
+        "--list-id", "-i",
+        type=str,
+        default=None,
+        help="指定榜单 ID（与 --crawl 配合使用）",
     )
 
     args = parser.parse_args()
@@ -187,18 +260,32 @@ def main() -> None:
         list_charts()
         return
 
-    # 抓取所有平台（--all 且未指定平台）
-    if args.all and args.platform is None:
+    # 爬取所有平台
+    if args.all:
         run_all_platforms()
-    # 抓取单个平台所有榜单（--all 且指定了平台）
-    elif args.all:
-        run_platform_all(args.platform)
-    # 抓取单个榜单（未指定平台时默认 netease）
-    else:
-        platform = args.platform or "netease"
-        run_spider(platform, args.list_id)
+        return
 
-    print("Done!")
+    # 仅爬取榜单
+    if args.crawl:
+        if args.platform:
+            # 指定了平台，使用指定的平台和榜单
+            platform = args.platform
+            list_id = args.list_id
+        else:
+            # 未指定平台，默认爬取第一个榜单（DJ热歌榜）
+            platform = DEFAULT_CHARTS[0]["platform"]
+            list_id = args.list_id or DEFAULT_CHARTS[0]["chart_id"]
+        run_spider(platform, list_id)
+        print("Done!")
+        return
+
+    # 仅生成歌单
+    if args.playlist:
+        run_playlist_generator()
+        return
+
+    # 默认流程：更新榜单 -> 生成歌单
+    run_default_flow()
 
 
 if __name__ == "__main__":

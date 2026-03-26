@@ -1,0 +1,171 @@
+{
+  "date": "2026-03-24",
+  "stages": {
+    "开播前期": [
+      {
+        "song_name": "露水情分泪满瞳",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "最真的梦",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "深情只是个笑话",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "不能不想你",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "只想跟你走",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "被宠爱",
+        "vibe": "动感热场 (适合带动气氛，引发共鸣)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "青城山下白素贞",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "画你",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "中",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "蓝眼泪",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "百万个吻",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "月亮照山川",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      },
+      {
+        "song_name": "缘为冰",
+        "vibe": "动感热场 (适合带动气氛)",
+        "tempo": "快",
+        "broadcast_stage": "开播前期 (需要拉留存、吸引路人)"
+      }
+    ],
+    "直播中场": [
+      {
+        "song_name": "手心有你",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "化风行万里",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "半壶纱",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "拥有的回忆",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "西海情歌",
+        "vibe": "经典回忆 (高传唱度，易引发共鸣)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "一路生花",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "快",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "忘了你忘了我",
+        "vibe": "经典回忆 (高传唱度，易引发共鸣)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "桥边姑娘",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "终于把你遇见",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "心雨",
+        "vibe": "抒情走心 (易引发共鸣)",
+        "tempo": "快",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "梦底",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "翩翩",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "女人花",
+        "vibe": "经典回忆 (高传唱度，易引发共鸣)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "听心",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      },
+      {
+        "song_name": "埋在心底的爱",
+        "vibe": "抒情走心 (适合安静聆听)",
+        "tempo": "中",
+        "broadcast_stage": "直播中场 (稳固粉丝、提供情绪价值)"
+      }
+    ]
+  }
+}
