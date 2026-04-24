@@ -1,0 +1,59 @@
+/* 曲库歌曲样式 */
+
+.page-header {
+  margin-bottom: 32rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.page-subtitle {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background-color: var(--bg-card);
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.song-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.song-name {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.song-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.tag {
+  font-size: 20rpx;
+  color: var(--text-secondary);
+  background-color: var(--bg-primary);
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}

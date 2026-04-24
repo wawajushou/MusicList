@@ -42,3 +42,9 @@ env/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# 微信小程序
+Frontend_MiniApp/**/node_modules/
+Frontend_MiniApp/**/miniprogram_npm/
+Frontend_MiniApp/**/package-lock.json
+Frontend_MiniApp/project.private.config.json

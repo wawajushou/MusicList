@@ -1,0 +1,22 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">曲库歌曲</text>
+    <text class="page-subtitle">共 {{songs.length}} 首歌曲</text>
+  </view>
+
+  <!-- 歌曲列表 -->
+  <view class="song-list">
+    <block wx:for="{{songs}}" wx:key="index">
+      <view class="song-item">
+        <view class="song-info">
+          <text class="song-name">{{item.song_name}}</text>
+          <text class="song-tags">
+            <text class="tag" wx:if="{{item.vibe}}">{{item.vibe}}</text>
+            <text class="tag" wx:if="{{item.broadcast_stage}}">{{item.broadcast_stage}}</text>
+          </text>
+        </view>
+      </view>
+    </block>
+  </view>
+</view>

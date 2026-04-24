@@ -1,0 +1,118 @@
+<view class="container">
+  <!-- 天气卡片 -->
+  <view class="glass-card weather-card">
+    <!-- 位置名称 -->
+    <view class="weather-location">
+      <view class="location-main">
+        <text class="location-icon">📍</text>
+        <text class="location-name">{{weather.location || '海埂大坝'}}</text>
+      </view>
+      <text class="location-district">{{weather.district || '昆明市西山区'}}</text>
+    </view>
+    
+    <view class="weather-header">
+      <view class="weather-icon">{{weather.icon}}</view>
+      <view class="weather-info">
+        <view class="weather-date">
+          <text wx:if="{{weather.isToday}}">今日天气</text>
+          <text wx:else>明日天气</text>
+          {{weather.date}} {{weather.timeRange}}
+        </view>
+      </view>
+      <view class="weather-loading" wx:if="{{weatherLoading}}">
+        <view class="loading-dot"></view>
+        <view class="loading-dot"></view>
+        <view class="loading-dot"></view>
+      </view>
+    </view>
+    <view class="weather-main">
+      <text class="weather-temp">{{weather.temp}}°C</text>
+      <text class="weather-range" wx:if="{{weather.tempRange}}">{{weather.tempRange}}</text>
+      <text class="weather-desc">{{weather.desc}}</text>
+    </view>
+    <view class="weather-advice">
+      <view class="advice-item">
+        <text class="advice-icon">👕</text>
+        <text class="advice-text">{{weather.advice.clothing}}</text>
+      </view>
+      <!-- 降雨详情 - 有降雨时突出显示 -->
+      <view class="advice-item rain-warning" wx:if="{{weather.rainDetails.length > 0}}">
+        <text class="advice-icon">🌧️</text>
+        <text class="advice-text">{{weather.advice.rain}}</text>
+      </view>
+      <view class="advice-item" wx:else>
+        <text class="advice-icon">🌧️</text>
+        <text class="advice-text">{{weather.advice.rain}}</text>
+      </view>
+      <view class="advice-item">
+        <text class="advice-icon">☀️</text>
+        <text class="advice-text">
+          <text wx:if="{{weather.uvDisplay}}">{{weather.uvDisplay}}，</text>
+          {{weather.advice.uv}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 歌单标题区 -->
+  <view class="playlist-header">
+    <view class="playlist-title">
+      <text class="emoji">📅</text>
+      <text class="title-text">{{playlistDate}}歌单</text>
+    </view>
+    <view class="playlist-update">
+      <text class="update-label">下次更新</text>
+      <text class="update-time">{{updateTime}}</text>
+    </view>
+  </view>
+
+  <!-- 开播热场 -->
+  <view class="card section-card">
+    <view class="section-title">
+      <text class="emoji">📌</text>
+      <text>开播热场</text>
+      <text class="count">（{{stageOne.songs.length}}首）</text>
+    </view>
+    <view class="song-list">
+      <block wx:for="{{stageOne.songs}}" wx:key="index">
+        <view class="song-item">
+          <text class="song-index">{{index + 1}}</text>
+          <text class="song-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 中场留存 -->
+  <view class="card section-card">
+    <view class="section-title">
+      <text class="emoji">📌</text>
+      <text>中场留存</text>
+      <text class="count">（{{stageTwo.songs.length}}首）</text>
+    </view>
+    <view class="song-list">
+      <block wx:for="{{stageTwo.songs}}" wx:key="index">
+        <view class="song-item">
+          <text class="song-index">{{item.index}}</text>
+          <text class="song-name">{{item.name}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 今日新歌推荐 -->
+  <view class="card section-card" wx:if="{{newSongs.length > 0}}">
+    <view class="section-title">
+      <text class="emoji">🎵</text>
+      <text>今日热榜新歌推荐</text>
+    </view>
+    <view class="new-song-list">
+      <block wx:for="{{newSongs}}" wx:key="index">
+        <view class="new-song-item">
+          <text class="new-song-name">{{item.name}}</text>
+          <text class="new-song-source">来自{{item.source}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

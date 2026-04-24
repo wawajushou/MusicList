@@ -1,0 +1,43 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">我的曲库</text>
+    <text class="page-subtitle">管理你的专属歌曲库</text>
+  </view>
+
+  <!-- 曲库歌曲卡片 -->
+  <view class="card entry-card" bindtap="goToSongList">
+    <view class="card-content">
+      <view class="card-icon">📁</view>
+      <view class="card-info">
+        <text class="card-title">曲库歌曲</text>
+        <text class="card-desc">共 {{songCount}} 首歌曲</text>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 历史歌单记录卡片 -->
+  <view class="card entry-card" bindtap="goToHistoryPlaylist">
+    <view class="card-content">
+      <view class="card-icon">📋</view>
+      <view class="card-info">
+        <text class="card-title">历史歌单记录</text>
+        <text class="card-desc">已生成 {{playlistCount}} 份歌单</text>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+  </view>
+
+  <!-- 每日歌单生成规则卡片 -->
+  <view class="card entry-card" bindtap="goToPlaylistRules">
+    <view class="card-content">
+      <view class="card-icon">📝</view>
+      <view class="card-info">
+        <text class="card-title">每日歌单生成规则</text>
+        <text class="card-desc">了解歌单生成逻辑</text>
+      </view>
+      <view class="card-arrow">›</view>
+    </view>
+  </view>
+</view>

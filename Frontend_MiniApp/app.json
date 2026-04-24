@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/trends/trends",
+    "pages/library/library",
+    "pages/songList/songList",
+    "pages/historyPlaylist/historyPlaylist",
+    "pages/playlistRules/playlistRules"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#f5f5f7",
+    "navigationBarTitleText": "专属排歌管家",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f5f7"
+  },
+  "tabBar": {
+    "color": "#86868b",
+    "selectedColor": "#1d1d1f",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今日看板"
+      },
+      {
+        "pagePath": "pages/trends/trends",
+        "text": "榜单速递"
+      },
+      {
+        "pagePath": "pages/library/library",
+        "text": "我的曲库"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

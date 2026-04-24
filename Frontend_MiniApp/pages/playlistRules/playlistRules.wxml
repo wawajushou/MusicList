@@ -1,0 +1,68 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">每日歌单生成规则</text>
+    <text class="page-subtitle">了解歌单生成逻辑</text>
+  </view>
+
+  <!-- 规则内容 -->
+  <view class="rule-section">
+    <view class="rule-title">
+      <text class="rule-number">1️⃣</text>
+      <text class="rule-text">歌单结构</text>
+    </view>
+    <view class="rule-content">
+      <view class="rule-item">• 开播热场：12首</view>
+      <view class="rule-item">• 中场留存：15首</view>
+      <view class="rule-item">• 共计：27首歌曲</view>
+    </view>
+  </view>
+
+  <view class="rule-section">
+    <view class="rule-title">
+      <text class="rule-number">2️⃣</text>
+      <text class="rule-text">生成逻辑</text>
+    </view>
+    <view class="rule-content">
+      <view class="rule-item">• 每天从基础曲库随机抽取</view>
+      <view class="rule-item">• 与前一天歌单保持30%-50%重复率</view>
+      <view class="rule-item">• 确保新老歌曲平衡</view>
+    </view>
+  </view>
+
+  <view class="rule-section">
+    <view class="rule-title">
+      <text class="rule-number">3️⃣</text>
+      <text class="rule-text">新歌推荐</text>
+    </view>
+    <view class="rule-content">
+      <view class="rule-item">• 从酷狗DJ热歌榜选取1首</view>
+      <view class="rule-item">• 从酷狗飙升榜选取1首</view>
+      <view class="rule-item">• 排除曲库中已有的歌曲</view>
+    </view>
+  </view>
+
+  <view class="rule-section">
+    <view class="rule-title">
+      <text class="rule-number">4️⃣</text>
+      <text class="rule-text">歌单持久化</text>
+    </view>
+    <view class="rule-content">
+      <view class="rule-item">• 每日歌单保存为JSON文件</view>
+      <view class="rule-item">• 同一天多次生成保持一致</view>
+      <view class="rule-item">• 历史歌单可用于分析</view>
+    </view>
+  </view>
+
+  <view class="rule-section">
+    <view class="rule-title">
+      <text class="rule-number">5️⃣</text>
+      <text class="rule-text">歌曲标签系统</text>
+    </view>
+    <view class="rule-content">
+      <view class="rule-item">• vibe：动感热场、抒情走心、经典回忆</view>
+      <view class="rule-item">• broadcast_stage：开播前期、直播中场</view>
+      <view class="rule-item">• tempo：快、中、慢</view>
+    </view>
+  </view>
+</view>

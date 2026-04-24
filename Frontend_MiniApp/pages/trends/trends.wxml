@@ -1,0 +1,66 @@
+<view class="container">
+  <!-- 来源标识 -->
+  <view class="source-badge">
+    <view class="source-content">
+      <view class="source-logo-box">
+        <text class="logo-icon">🎵</text>
+      </view>
+      <view class="source-info">
+        <text class="source-text">实时数据来自</text>
+        <text class="source-name">酷狗音乐 · 排行榜</text>
+      </view>
+    </view>
+    <view class="update-hint">
+      <text class="update-hint-text">每日 20:00 更新</text>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-box" wx:if="{{chartsLoading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">正在获取榜单数据...</text>
+  </view>
+
+  <!-- 榜单列表 -->
+  <block wx:for="{{charts}}" wx:key="chartId">
+    <view class="card chart-card">
+      <view class="chart-header">
+        <view class="chart-title">
+          <text class="chart-icon">{{item.icon}}</text>
+          <text class="chart-name">{{item.name}}</text>
+        </view>
+        <view class="chart-meta">
+          <text class="chart-count">共{{item.totalCount}}首</text>
+        </view>
+      </view>
+      
+      <!-- 歌曲列表：默认3首，展开后全部显示 -->
+      <view class="song-list">
+        <block wx:for="{{item.expanded ? item.songs : item.displaySongs}}" wx:for-index="songIdx" wx:for-item="song" wx:key="rank">
+          <view class="song-item">
+            <view class="song-rank {{song.rank <= 3 ? 'rank-top' : ''}}">
+              <text class="rank-num">{{song.rank}}</text>
+            </view>
+            <view class="song-info">
+              <text class="song-name">{{song.name}}</text>
+              <text class="song-artist">{{song.artist}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+      
+      <!-- 展开/收起按钮 -->
+      <view class="expand-btn" bindtap="toggleExpand" data-id="{{item.chartId}}" wx:if="{{item.totalCount > 3}}">
+        <text class="expand-text">{{item.expanded ? '收起' : '展开全部 ' + item.totalCount + ' 首'}}</text>
+        <text class="expand-arrow">{{item.expanded ? '▲' : '▼'}}</text>
+      </view>
+    </view>
+  </block>
+  
+  <!-- 空状态 -->
+  <view class="empty-box" wx:if="{{!chartsLoading && charts.length === 0}}">
+    <view class="empty-icon">📋</view>
+    <text class="empty-title">今日榜单暂未更新</text>
+    <text class="empty-desc">每日20:00自动更新</text>
+  </view>
+</view>

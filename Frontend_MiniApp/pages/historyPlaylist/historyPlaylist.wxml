@@ -1,0 +1,77 @@
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-title">历史歌单记录</text>
+    <text class="page-subtitle">已生成 {{playlists.length}} 份歌单</text>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-box" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 歌单列表 -->
+  <view class="playlist-list" wx:if="{{!loading}}">
+    <block wx:for="{{playlists}}" wx:key="date">
+      <view class="playlist-card" bindtap="toggleExpand" data-date="{{item.date}}">
+        <!-- 卡片头部 -->
+        <view class="playlist-header">
+          <view class="playlist-date">{{item.date}}</view>
+          <view class="playlist-summary">
+            <text class="summary-item">开播热场 {{item.stageOneCount}}首</text>
+            <text class="summary-divider">|</text>
+            <text class="summary-item">中场留存 {{item.stageTwoCount}}首</text>
+          </view>
+          <view class="expand-icon">{{expandedDate === item.date ? '▲' : '▼'}}</view>
+        </view>
+        
+        <!-- 展开的详情 -->
+        <view class="playlist-detail" wx:if="{{expandedDate === item.date}}">
+          <!-- 开播热场 -->
+          <view class="stage-section" wx:if="{{item.stageOneSongs.length > 0}}">
+            <view class="stage-title">开播热场</view>
+            <view class="stage-songs">
+              <block wx:for="{{item.stageOneSongs}}" wx:for-item="song" wx:key="song_name">
+                <view class="detail-song">
+                  <text class="detail-index">{{index + 1}}</text>
+                  <text class="detail-name">{{song.song_name}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+          
+          <!-- 中场留存 -->
+          <view class="stage-section" wx:if="{{item.stageTwoSongs.length > 0}}">
+            <view class="stage-title">中场留存</view>
+            <view class="stage-songs">
+              <block wx:for="{{item.stageTwoSongs}}" wx:for-item="song" wx:key="song_name">
+                <view class="detail-song">
+                  <text class="detail-index">{{item.stageOneCount + index + 1}}</text>
+                  <text class="detail-name">{{song.song_name}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+          
+          <!-- 新歌推荐 -->
+          <view class="stage-section" wx:if="{{item.newSongs.length > 0}}">
+            <view class="stage-title">新歌推荐</view>
+            <view class="stage-songs">
+              <block wx:for="{{item.newSongs}}" wx:for-item="song" wx:key="name">
+                <view class="detail-song new-song">
+                  <text class="detail-name">{{song.name}}</text>
+                  <text class="detail-source">{{song.source}}</text>
+                </view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-box" wx:if="{{!loading && playlists.length === 0}}">
+    <text class="empty-text">暂无历史歌单</text>
+  </view>
+</view>

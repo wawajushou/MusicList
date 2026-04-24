@@ -1,0 +1,52 @@
+/* 每日歌单生成规则样式 */
+
+.page-header {
+  margin-bottom: 32rpx;
+}
+
+.page-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.page-subtitle {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.rule-section {
+  background-color: var(--bg-card);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+
+.rule-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+
+.rule-number {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.rule-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.rule-content {
+  padding-left: 40rpx;
+}
+
+.rule-item {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
