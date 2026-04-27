@@ -148,7 +148,8 @@ function selectNewSuggestions(baseLibrary, charts) {
 
   const libraryNames = new Set(baseLibrary.map(s => normalizeSongName(s.song_name)));
   const suggestions = [];
-  const targetCharts = ['DJ热歌榜', '酷狗飙升榜'];
+  // 从三个榜单各选1首
+  const targetCharts = ['DJ热歌榜', '酷狗飙升榜', '内地榜'];
 
   for (const chart of charts) {
     if (!targetCharts.includes(chart.chartName)) continue;
@@ -165,7 +166,7 @@ function selectNewSuggestions(baseLibrary, charts) {
         source: chart.chartName,
         rank: picked.rank
       });
-      console.log(`推荐新歌: ${picked.name} (来自${chart.chartName})`);
+      console.log(`推荐新歌: ${picked.name} (来自${chart.chartName} 第${picked.rank}名)`);
     }
   }
 

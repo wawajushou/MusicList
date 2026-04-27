@@ -126,51 +126,88 @@ function processWeatherData(apiData, uvIndex, uvLevel, uvDataSource) {
   const nowUTC = new Date();
   const nowBeijing = new Date(nowUTC.getTime() + 8 * 60 * 60 * 1000);
   const currentHourBeijing = nowBeijing.getUTCHours();
+  const currentMinuteBeijing = nowBeijing.getUTCMinutes();
   
-  console.log('当前UTC时间:', nowUTC.toISOString());
-  console.log('当前北京时间:', nowBeijing.toISOString(), '小时:', currentHourBeijing);
+  console.log('当前北京时间:', currentHourBeijing + ':' + String(currentMinuteBeijing).padStart(2, '0'));
   
-  let targetDate, targetDateStr, isToday;
+  let targetDate, targetDateStr, isToday, isRealtime;
+  let targetHours = [];
   
-  if (currentHourBeijing < 12) {
-    // 北京时间12点前：显示今天的天气
+  // 判断是否在7-11点之间
+  if (currentHourBeijing >= 7 && currentHourBeijing < 11) {
+    // 在7-11点之间：获取当前时刻的实时天气
+    console.log('当前在7-11点之间，获取实时天气');
     targetDate = nowBeijing;
     isToday = true;
-    console.log('当前北京时间12点前，显示今天的天气');
+    isRealtime = true;
+    
+    targetDateStr = targetDate.getUTCFullYear() + '-' + 
+      String(targetDate.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+      String(targetDate.getUTCDate()).padStart(2, '0');
+    
+    // 获取当前小时的数据（或最近的下一个整点）
+    targetHours = apiData.hourly.filter(hour => {
+      const dateTimePart = hour.fxTime.split('T')[0];
+      const timeStr = hour.fxTime.split('T')[1];
+      const hourPart = timeStr.split(':')[0];
+      const hourNum = parseInt(hourPart);
+      
+      // 匹配今天的数据，且小时 >= 当前小时
+      return dateTimePart === targetDateStr && hourNum >= currentHourBeijing;
+    });
+    
+    // 只取第一条（最近的整点数据）
+    if (targetHours.length > 0) {
+      targetHours = [targetHours[0]];
+      const hourNum = parseInt(targetHours[0].fxTime.split('T')[1].split(':')[0]);
+      console.log('使用最近的整点数据:', hourNum + '时');
+    }
+    
+    console.log('获取实时天气:', currentHourBeijing + '时');
   } else {
-    // 北京时间12点后：显示明天的天气
-    targetDate = new Date(nowBeijing.getTime() + 24 * 60 * 60 * 1000);
-    isToday = false;
-    console.log('当前北京时间12点后，显示明天的天气');
+    // 不在7-11点之间：获取预报
+    isRealtime = false;
+    
+    if (currentHourBeijing < 7) {
+      // 早上7点前：显示今天的7-11点预报
+      targetDate = nowBeijing;
+      isToday = true;
+      console.log('7点前，显示今天的7-11点预报');
+    } else {
+      // 11点后：显示明天的7-11点预报
+      targetDate = new Date(nowBeijing.getTime() + 24 * 60 * 60 * 1000);
+      isToday = false;
+      console.log('11点后，显示明天的7-11点预报');
+    }
+    
+    targetDateStr = targetDate.getUTCFullYear() + '-' + 
+      String(targetDate.getUTCMonth() + 1).padStart(2, '0') + '-' + 
+      String(targetDate.getUTCDate()).padStart(2, '0');
+    
+    // 筛选7-11点的天气数据
+    targetHours = apiData.hourly.filter(hour => {
+      const dateTimePart = hour.fxTime.split('T')[0];
+      const hourPart = hour.fxTime.split('T')[1].split(':')[0];
+      const hourNum = parseInt(hourPart);
+      return dateTimePart === targetDateStr && hourNum >= 7 && hourNum < 11;
+    });
+    
+    console.log('筛选7-11点预报数据:', targetHours.length, '条');
   }
   
-  targetDateStr = targetDate.getUTCFullYear() + '-' + 
-    String(targetDate.getUTCMonth() + 1).padStart(2, '0') + '-' + 
-    String(targetDate.getUTCDate()).padStart(2, '0');
-  
   console.log('目标日期:', targetDateStr);
-  
-  // 筛选7-11点的天气数据
-  const targetHours = apiData.hourly.filter(hour => {
-    const dateTimePart = hour.fxTime.split('T')[0];
-    const hourPart = hour.fxTime.split('T')[1].split(':')[0];
-    const hourNum = parseInt(hourPart);
-    
-    const isMatch = dateTimePart === targetDateStr && hourNum >= 7 && hourNum < 11;
-    if (isMatch) {
-      console.log('匹配数据:', hour.fxTime, hour.text, hour.temp + '°C', '降水:', hour.precip + 'mm');
-    }
-    return isMatch;
-  });
-  
-  console.log('筛选到7-11点数据:', targetHours.length, '条');
+  console.log('是否实时:', isRealtime);
   
   if (targetHours.length === 0) {
     console.log('未找到目标时段数据');
     return null;
   }
   
-  return generateWeatherAdvice(targetHours, targetDate, isToday, uvIndex, uvLevel, uvDataSource);
+  // 生成更新时间字符串
+  const updateTimeStr = String(currentHourBeijing).padStart(2, '0') + ':' + 
+    String(currentMinuteBeijing).padStart(2, '0');
+  
+  return generateWeatherAdvice(targetHours, targetDate, isToday, isRealtime, updateTimeStr, uvIndex, uvLevel, uvDataSource);
 }
 
 // 分析逐小时降雨
@@ -225,7 +262,7 @@ function generateRainAdvice(rainPeriods) {
 }
 
 // 生成天气建议
-function generateWeatherAdvice(hours, targetDate, isToday, uvIndex, uvLevel, uvDataSource) {
+function generateWeatherAdvice(hours, targetDate, isToday, isRealtime, updateTime, uvIndex, uvLevel, uvDataSource) {
   const temps = hours.map(h => parseInt(h.temp));
   const avgTemp = Math.round(temps.reduce((a, b) => a + b, 0) / temps.length);
   const maxTemp = Math.max(...temps);
@@ -298,11 +335,14 @@ function generateWeatherAdvice(hours, targetDate, isToday, uvIndex, uvLevel, uvD
   const month = String(targetDate.getUTCMonth() + 1).padStart(2, '0');
   const day = String(targetDate.getUTCDate()).padStart(2, '0');
   
+  // 根据是否实时数据决定时间范围显示
+  const timeRange = isRealtime ? '实时' : '07:00-11:00';
+  
   return {
     location: '海埂大坝',
     isToday: isToday,
     date: `${month}月${day}日`,
-    timeRange: '07:00-11:00',
+    timeRange: timeRange,
     icon: weatherIcon,
     temp: avgTemp,
     tempRange: `${minTemp}°C ~ ${maxTemp}°C`,
@@ -310,6 +350,8 @@ function generateWeatherAdvice(hours, targetDate, isToday, uvIndex, uvLevel, uvD
     uvDisplay: uvDisplay,
     uvSource: uvSource,
     rainDetails: rainPeriods,
+    isRealtime: isRealtime,
+    updateTime: updateTime,
     advice: {
       clothing: clothingAdvice,
       rain: rainAdvice,

@@ -10,8 +10,23 @@
         <text class="source-name">酷狗音乐 · 排行榜</text>
       </view>
     </view>
-    <view class="update-hint">
-      <text class="update-hint-text">每日 20:00 更新</text>
+    <view class="source-meta">
+      <view class="update-time-info" wx:if="{{updateTime}}">
+        <text class="update-time-label">更新于</text>
+        <text class="update-time-value">{{updateTime}}</text>
+      </view>
+      <view class="next-update-info" wx:if="{{nextUpdateTime}}">
+        <text class="next-update-label">下次更新</text>
+        <text class="next-update-value">{{nextUpdateTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 手动刷新按钮 -->
+  <view class="refresh-bar">
+    <view class="refresh-btn {{chartsRefreshing ? 'refreshing' : ''}}" bindtap="refreshCharts">
+      <text class="refresh-icon">🔄</text>
+      <text class="refresh-text">{{chartsRefreshing ? '更新中...' : '刷新榜单'}}</text>
     </view>
   </view>
 
@@ -61,6 +76,9 @@
   <view class="empty-box" wx:if="{{!chartsLoading && charts.length === 0}}">
     <view class="empty-icon">📋</view>
     <text class="empty-title">今日榜单暂未更新</text>
-    <text class="empty-desc">每日20:00自动更新</text>
+    <text class="empty-desc">每日 12:00 和 18:00 自动更新</text>
+    <view class="empty-refresh-btn" bindtap="refreshCharts">
+      <text>🔄 立即刷新</text>
+    </view>
   </view>
 </view>

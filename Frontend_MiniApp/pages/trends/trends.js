@@ -3,12 +3,15 @@
 Page({
   data: {
     updateTime: "",
+    nextUpdateTime: "",
     chartsLoading: true,
+    chartsRefreshing: false,
     charts: []
   },
 
   onLoad: function () {
     this.fetchCharts();
+    this.updateNextUpdateTime();
   },
 
   // 展开/收起
@@ -23,6 +26,31 @@ Page({
     this.setData({ charts });
   },
 
+  // 手动刷新榜单（调用云函数爬取）
+  refreshCharts: function () {
+    if (this.data.chartsRefreshing) return;
+    this.setData({ chartsRefreshing: true });
+    
+    wx.cloud.callFunction({
+      name: 'updateCharts',
+      success: (res) => {
+        if (res.result && res.result.success) {
+          wx.showToast({ title: '榜单已更新', icon: 'success' });
+          this.fetchCharts();
+          this.updateNextUpdateTime();
+        } else {
+          wx.showToast({ title: '更新失败', icon: 'none' });
+        }
+        this.setData({ chartsRefreshing: false });
+      },
+      fail: () => {
+        wx.showToast({ title: '更新失败', icon: 'none' });
+        this.setData({ chartsRefreshing: false });
+      }
+    });
+  },
+
+  // 从数据库获取榜单
   fetchCharts: function () {
     this.setData({ chartsLoading: true });
     
@@ -46,17 +74,25 @@ Page({
               expanded: false,
               updateTime: chart.updateTime,
               songs: songs,
-              displaySongs: songs.slice(0, 3),  // 预处理：只取前3首
+              displaySongs: songs.slice(0, 3),
               totalCount: songs.length
             };
           });
           
+          // 获取最新的更新时间
+          const latestUpdate = res.data[0].updateTime;
+          let updateTimeStr = '';
+          if (latestUpdate) {
+            const updateDate = new Date(latestUpdate);
+            const beijingTime = new Date(updateDate.getTime() + 8 * 60 * 60 * 1000);
+            updateTimeStr = String(beijingTime.getUTCHours()).padStart(2, '0') + ':' + 
+              String(beijingTime.getUTCMinutes()).padStart(2, '0');
+          }
+          
           this.setData({
             charts: charts,
             chartsLoading: false,
-            updateTime: res.data[0].updateTime 
-              ? res.data[0].updateTime.substring(11, 16) 
-              : ''
+            updateTime: updateTimeStr
           });
         } else {
           this.setData({ chartsLoading: false });
@@ -67,6 +103,24 @@ Page({
         wx.showToast({ title: '加载榜单失败', icon: 'none' });
       }
     });
+  },
+
+  // 计算下次更新时间
+  updateNextUpdateTime: function () {
+    const now = new Date();
+    const beijingTime = new Date(now.getTime() + 8 * 60 * 60 * 1000);
+    const hour = beijingTime.getUTCHours();
+    
+    let nextUpdate = '';
+    if (hour < 12) {
+      nextUpdate = '今日 12:00';
+    } else if (hour < 18) {
+      nextUpdate = '今日 18:00';
+    } else {
+      nextUpdate = '明日 12:00';
+    }
+    
+    this.setData({ nextUpdateTime: nextUpdate });
   },
 
   getTodayDate: function () {
@@ -84,6 +138,7 @@ Page({
 
   onPullDownRefresh: function () {
     this.fetchCharts();
+    this.updateNextUpdateTime();
     setTimeout(() => wx.stopPullDownRefresh(), 1500);
   }
 });

@@ -52,6 +52,18 @@
         </text>
       </view>
     </view>
+    
+    <!-- 刷新按钮和更新时间 -->
+    <view class="weather-footer">
+      <view class="refresh-btn {{weatherRefreshing ? 'refreshing' : ''}}" bindtap="refreshWeather">
+        <text class="refresh-icon">🔄</text>
+        <text class="refresh-text">刷新天气</text>
+      </view>
+      <view class="update-time-info" wx:if="{{weatherUpdateTime}}">
+        <text class="update-time-label">更新于</text>
+        <text class="update-time-value">{{weatherUpdateTime}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 歌单标题区 -->
@@ -64,6 +76,11 @@
       <text class="update-label">下次更新</text>
       <text class="update-time">{{updateTime}}</text>
     </view>
+  </view>
+
+  <!-- Fallback 提示 -->
+  <view class="fallback-tip" wx:if="{{isFallback}}">
+    <text class="fallback-text">当前显示的是 {{fallbackDate}} 的歌单</text>
   </view>
 
   <!-- 开播热场 -->
@@ -110,7 +127,7 @@
       <block wx:for="{{newSongs}}" wx:key="index">
         <view class="new-song-item">
           <text class="new-song-name">{{item.name}}</text>
-          <text class="new-song-source">来自{{item.source}}</text>
+          <text class="new-song-source">来自{{item.source}} 第{{item.rank}}名</text>
         </view>
       </block>
     </view>
