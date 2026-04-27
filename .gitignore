@@ -22,7 +22,7 @@ data/qqmusic/
 data/playlists/
 
 # WxPusher 配置（敏感信息）
-config.json
+/config.json
 
 # 日志文件
 logs/*.log
